@@ -30,7 +30,6 @@ Undangan digital interaktif berbasis web (Mobile-First Responsive) untuk perayaa
    - Waktu: **15.00 - 18.00 WIB**.
    - Lokasi: **Hayyu Grill Korean BBQ (Lt. 2, Mall Yogya Grand Karawang)**.
    - Tombol **"🗺️ Buka di Google Maps"** dan **"📅 Simpan ke Google Calendar"**.
-   - Panduan **Dress Code**: Casual & Ceria (Nuansa Biru, Putih & Merah).
 
 5. **Party Rundown (Susunan Acara)**:
    - Timeline interaktif dari registrasi, fun games & magic show, tiup lilin & potong kue, makan bersama Korean BBQ feast, hingga foto bersama & goodie bag.
