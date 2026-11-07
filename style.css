@@ -157,20 +157,37 @@ body {
 }
 
 .cover-logo-wrapper {
-  margin: 16px 0 10px;
-  animation: pulseLogo 3s infinite ease-in-out;
+  margin: 14px 0 10px;
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cover-logo-wrapper::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 235, 120, 0.5) 0%, rgba(255, 255, 255, 0.25) 40%, rgba(37, 84, 165, 0) 70%);
+  filter: blur(14px);
+  animation: glowAuraPulse 3s ease-in-out infinite alternate;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hayyu-logo-img {
-  width: 230px;
-  max-width: 85%;
+  position: relative;
+  z-index: 1;
+  width: 275px;
+  max-width: 90%;
   height: auto;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
-}
-
-@keyframes pulseLogo {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  filter: 
+    drop-shadow(0 0 14px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 0 28px rgba(255, 215, 0, 0.7))
+    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+  animation: logoSwayGlow 3.5s ease-in-out infinite;
 }
 
 .cover-photo-wrapper {
@@ -306,65 +323,115 @@ body {
   transform: translateY(0);
 }
 
-/* Brand Banner Card */
-.brand-top-banner {
-  background: linear-gradient(135deg, #1d4585 0%, #2554a5 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--border-radius-card);
-  padding: 20px 16px;
+/* Brand Hero Header (Seamless, No Outer Box, Glowing & Swaying) */
+.brand-hero-header {
+  background: transparent;
+  padding: 10px 8px 4px;
   text-align: center;
-  color: white;
-  box-shadow: var(--shadow-card);
   position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.brand-top-banner::before {
+.logo-glow-wrapper {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px 0 14px;
+}
+
+/* Radiant glowing light aura behind the logo */
+.logo-glow-wrapper::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('assets/seigaiha_pattern.svg');
-  background-size: 80px 40px;
-  opacity: 0.15;
+  width: 290px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 235, 120, 0.55) 0%, rgba(255, 255, 255, 0.3) 35%, rgba(37, 84, 165, 0) 70%);
+  filter: blur(16px);
+  animation: glowAuraPulse 3s ease-in-out infinite alternate;
+  z-index: 0;
   pointer-events: none;
 }
 
-.top-badges-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+@keyframes glowAuraPulse {
+  0% { transform: scale(0.92); opacity: 0.65; }
+  100% { transform: scale(1.18); opacity: 1; }
 }
 
-.top-badge-item {
-  height: 28px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.85;
-}
-
+/* Enlarged, swaying, glowing logo */
 .main-hayyu-logo {
-  width: 250px;
-  max-width: 90%;
+  position: relative;
+  z-index: 1;
+  width: 330px;
+  max-width: 96%;
   height: auto;
-  margin: 4px auto 12px;
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+  margin: 0 auto;
+  filter: 
+    drop-shadow(0 0 16px rgba(255, 255, 255, 0.9))
+    drop-shadow(0 0 32px rgba(255, 215, 0, 0.75))
+    drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+  animation: logoSwayGlow 3.5s ease-in-out infinite;
+  transform-origin: center center;
 }
 
+/* Playful swaying / wobble ("goyang-goyang") and shimmering light ("cahaya") */
+@keyframes logoSwayGlow {
+  0% {
+    transform: translateY(0px) rotate(-3deg) scale(1);
+    filter: 
+      drop-shadow(0 0 14px rgba(255, 255, 255, 0.85))
+      drop-shadow(0 0 28px rgba(255, 215, 0, 0.7))
+      drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+  }
+  25% {
+    transform: translateY(-5px) rotate(1.5deg) scale(1.03);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg) scale(1.06);
+    filter: 
+      drop-shadow(0 0 24px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 45px rgba(255, 230, 80, 0.95))
+      drop-shadow(0 14px 26px rgba(0, 0, 0, 0.45));
+  }
+  75% {
+    transform: translateY(-4px) rotate(-1.5deg) scale(1.03);
+  }
+  100% {
+    transform: translateY(0px) rotate(-3deg) scale(1);
+    filter: 
+      drop-shadow(0 0 14px rgba(255, 255, 255, 0.85))
+      drop-shadow(0 0 28px rgba(255, 215, 0, 0.7))
+      drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+  }
+}
+
+.party-badge-container {
+  margin-top: 4px;
+}
+
+/* Red Box Badge ("bacaan di box merah") */
 .party-badge-pill {
   display: inline-block;
-  background: linear-gradient(135deg, #e52e2e 0%, #ff5252 100%);
-  color: white;
-  padding: 6px 20px;
+  background: linear-gradient(135deg, #e52e2e 0%, #ff3838 100%);
+  color: #ffffff;
+  padding: 8px 26px;
   border-radius: var(--border-radius-pill);
   font-family: var(--font-heading);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 10px rgba(229, 46, 46, 0.3);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  box-shadow: 0 4px 18px rgba(229, 46, 46, 0.55), 0 0 12px rgba(255, 80, 80, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  animation: pulseRedBadge 2.8s infinite ease-in-out;
+}
+
+@keyframes pulseRedBadge {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 18px rgba(229, 46, 46, 0.55); }
+  50% { transform: scale(1.04); box-shadow: 0 8px 26px rgba(229, 46, 46, 0.8), 0 0 20px rgba(255, 80, 80, 0.6); }
 }
 
 /* Card General Styling */

@@ -464,7 +464,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 10. Admin Authentication & Panel Management (PIN Protected)
-  let adminPin = localStorage.getItem('hayyu_admin_pin') || '1234';
+  let savedPin = localStorage.getItem('hayyu_admin_pin');
+  let adminPin = (savedPin && savedPin !== '1234') ? savedPin : '2026';
+  localStorage.setItem('hayyu_admin_pin', adminPin);
   let isAdminLoggedIn = sessionStorage.getItem('hayyu_admin_logged_in') === 'true';
 
   const pinModal = document.getElementById('pinModal');
@@ -517,9 +519,101 @@ document.addEventListener('DOMContentLoaded', () => {
       const pinField = document.getElementById('editAdminPin');
       if (pinField) pinField.value = '';
 
+      updateAdminRsvpSummary();
       editModal.classList.add('active');
     }
   };
+
+  // Admin RSVP Summary Calculator
+  function updateAdminRsvpSummary() {
+    let totalHadirPax = 0;
+    let totalTidakHadir = 0;
+    storedWishes.forEach(w => {
+      if (w.status === 'hadir') {
+        totalHadirPax += parseInt(w.pax) || 1;
+      } else {
+        totalTidakHadir++;
+      }
+    });
+
+    const hadirEl = document.getElementById('adminSummaryHadir');
+    const tidakHadirEl = document.getElementById('adminSummaryTidakHadir');
+    if (hadirEl) hadirEl.textContent = `${totalHadirPax} Orang`;
+    if (tidakHadirEl) tidakHadirEl.textContent = `${totalTidakHadir} Tamu`;
+  }
+
+  // Copy RSVP Summary for Hayyu Grill table reservation
+  const btnCopyRsvpSummary = document.getElementById('btnCopyRsvpSummary');
+  if (btnCopyRsvpSummary) {
+    btnCopyRsvpSummary.addEventListener('click', () => {
+      let totalHadirPax = 0;
+      let hadirList = [];
+      storedWishes.forEach(w => {
+        if (w.status === 'hadir') {
+          const pax = parseInt(w.pax) || 1;
+          totalHadirPax += pax;
+          hadirList.push(`• ${w.name} (${pax} pax)`);
+        }
+      });
+
+      const summaryText = `*REKAP RESERVASI MEJA ULANG TAHUN ${config.childNick.toUpperCase()}*\n` +
+        `Restoran: ${config.venueName}\n` +
+        `Hari & Tanggal: ${config.displayDate}\n` +
+        `Waktu Acara: ${config.displayTime}\n` +
+        `----------------------------------------\n` +
+        `*TOTAL PAX HADIR:* ${totalHadirPax} Orang\n\n` +
+        `*DAFTAR TAMU KONFIRMASI:* \n${hadirList.length ? hadirList.join('\n') : '(Belum ada tamu konfirmasi)'}\n` +
+        `----------------------------------------\n` +
+        `Keluarga ${config.parents}`;
+
+      copyToClipboard(summaryText, 'Format rekap reservasi berhasil disalin! 📋');
+    });
+  }
+
+  // WhatsApp Link Generator for specific guests
+  function getCustomGuestUrl(guestName) {
+    const cleanUrl = window.location.href.split('?')[0].split('#')[0];
+    return `${cleanUrl}?to=${encodeURIComponent(guestName)}`;
+  }
+
+  const btnShareWaGuest = document.getElementById('btnShareWaGuest');
+  if (btnShareWaGuest) {
+    btnShareWaGuest.addEventListener('click', () => {
+      const guestInput = document.getElementById('guestNameGenerator');
+      const name = guestInput ? guestInput.value.trim() : '';
+      if (!name) {
+        showToast('Mohon ketik nama tamu yang mau diundang');
+        if (guestInput) guestInput.focus();
+        return;
+      }
+
+      const guestLink = getCustomGuestUrl(name);
+      const waMsg = `Halo *${name}*,\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Anda serta keluarga untuk hadir di acara perayaan ulang tahun *${config.childName}* ke-${config.age} yang akan diselenggarakan di:\n\n` +
+        `🥩 *${config.venueName}*\n` +
+        `📅 ${config.displayDate}\n` +
+        `⏰ ${config.displayTime}\n\n` +
+        `Info lengkap dan konfirmasi kehadiran dapat dilihat melalui tautan undangan berikut:\n${guestLink}\n\n` +
+        `Merupakan suatu kebahagiaan bagi kami sekeluarga apabila Anda berkenan hadir dan memberikan doa restu. Terima kasih! 🙏✨\n\n` +
+        `- Salam hangat, ${config.parents}`;
+
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(waMsg)}`, '_blank');
+    });
+  }
+
+  const btnCopyLinkGuest = document.getElementById('btnCopyLinkGuest');
+  if (btnCopyLinkGuest) {
+    btnCopyLinkGuest.addEventListener('click', () => {
+      const guestInput = document.getElementById('guestNameGenerator');
+      const name = guestInput ? guestInput.value.trim() : '';
+      if (!name) {
+        showToast('Mohon ketik nama tamu yang mau diundang');
+        if (guestInput) guestInput.focus();
+        return;
+      }
+      const guestLink = getCustomGuestUrl(name);
+      copyToClipboard(guestLink, `Link undangan untuk ${name} berhasil disalin! 📋`);
+    });
+  }
 
   window.closeEditModal = function() {
     if (editModal) editModal.classList.remove('active');
