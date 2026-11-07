@@ -155,8 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check if opened=1 query parameter is set (useful for direct preview/screenshot)
   if (urlParams.get('opened') === '1' || urlParams.get('preview') === '1') {
-    if (coverScreen) coverScreen.classList.add('opened');
-    if (mainContent) mainContent.classList.add('visible');
+    if (coverScreen) {
+      coverScreen.classList.add('opened');
+      coverScreen.style.display = 'none';
+    }
+    if (mainContent) {
+      mainContent.classList.add('visible');
+      mainContent.style.opacity = '1';
+      mainContent.style.transform = 'translateY(0)';
+    }
   }
 
   if (openInvitationBtn) {
