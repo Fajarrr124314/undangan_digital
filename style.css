@@ -173,7 +173,7 @@ body {
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.35) 40%, rgba(255, 255, 255, 0) 75%);
   filter: blur(16px);
-  animation: smoothWhiteAura 4.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  animation: dynamicWhiteAura 3.6s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
   will-change: opacity, transform;
@@ -191,9 +191,9 @@ body {
     drop-shadow(0 0 45px rgba(255, 255, 255, 0.4))
     drop-shadow(0 8px 18px rgba(10, 25, 60, 0.45));
   will-change: transform;
-  transform: translate3d(0, 0, 0);
+  transform: scale(1) rotate(0deg);
   backface-visibility: hidden;
-  animation: smoothFloatSway 4.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  animation: dynamicZoomRotateLogo 3.6s ease-in-out infinite;
   transform-origin: 50% 50%;
 }
 
@@ -389,24 +389,36 @@ body {
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.35) 40%, rgba(255, 255, 255, 0) 75%);
   filter: blur(18px);
-  animation: smoothWhiteAura 4.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  animation: dynamicWhiteAura 3.6s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
   will-change: opacity, transform;
 }
 
-@keyframes smoothWhiteAura {
+@keyframes dynamicWhiteAura {
   0% {
     opacity: 0.65;
-    transform: scale(0.94);
+    transform: scale(0.95);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.15) rotate(-2.5deg);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(0.95);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.15) rotate(2.5deg);
   }
   100% {
-    opacity: 1;
-    transform: scale(1.08);
+    opacity: 0.65;
+    transform: scale(0.95);
   }
 }
 
-/* Enlarged, Ultra Smooth Floating Logo with Pure White Glow */
+/* Enlarged, Ultra Smooth Dynamic Zoom & Rotate Logo with Pure White Glow */
 .main-hayyu-logo {
   position: relative;
   z-index: 1;
@@ -420,21 +432,30 @@ body {
     drop-shadow(0 0 25px rgba(255, 255, 255, 0.7))
     drop-shadow(0 0 48px rgba(255, 255, 255, 0.4))
     drop-shadow(0 8px 18px rgba(10, 25, 60, 0.45));
-  /* GPU Composited Ultra-Smooth 60fps Swaying */
+  /* GPU Composited Dynamic Zoom & Rotate (Zero Delay, Tidak Monoton) */
   will-change: transform;
-  transform: translate3d(0, 0, 0);
+  transform: scale(1) rotate(0deg);
   backface-visibility: hidden;
-  animation: smoothFloatSway 4.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  animation: dynamicZoomRotateLogo 3.6s ease-in-out infinite;
   transform-origin: 50% 50%;
 }
 
-/* Ultra Smooth Physics Sinusoidal Sway ("goyang-goyang halus, tidak patah-patah & ringan") */
-@keyframes smoothFloatSway {
+/* Dynamic Zoom In/Out + Playful Alternating Rotation (Tanpa Delay & Tidak Monoton) */
+@keyframes dynamicZoomRotateLogo {
   0% {
-    transform: translate3d(0, 0px, 0) rotate(-2deg);
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.06) rotate(-2.5deg);
+  }
+  50% {
+    transform: scale(1) rotate(0deg);
+  }
+  75% {
+    transform: scale(1.06) rotate(2.5deg);
   }
   100% {
-    transform: translate3d(0, -9px, 0) rotate(2deg);
+    transform: scale(1) rotate(0deg);
   }
 }
 
