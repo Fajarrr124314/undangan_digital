@@ -153,6 +153,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const coverScreen = document.getElementById('coverScreen');
   const mainContent = document.getElementById('mainContent');
 
+  // Check if opened=1 query parameter is set (useful for direct preview/screenshot)
+  if (urlParams.get('opened') === '1' || urlParams.get('preview') === '1') {
+    if (coverScreen) coverScreen.classList.add('opened');
+    if (mainContent) mainContent.classList.add('visible');
+  }
+
   if (openInvitationBtn) {
     openInvitationBtn.addEventListener('click', () => {
       // 1. Play music
@@ -457,28 +463,125 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 10. Dynamic Data Editor / Customizer Modal
-  const editModal = document.getElementById('editModal');
-  const btnEdit = document.getElementById('btnFloatingEdit');
+  // 10. Admin Authentication & Panel Management (PIN Protected)
+  let adminPin = localStorage.getItem('hayyu_admin_pin') || '1234';
+  let isAdminLoggedIn = sessionStorage.getItem('hayyu_admin_logged_in') === 'true';
 
-  if (btnEdit && editModal) {
-    btnEdit.addEventListener('click', () => {
-      // Pre-fill inputs
-      document.getElementById('editChildName').value = config.childName;
-      document.getElementById('editChildAge').value = config.age;
-      document.getElementById('editEventDate').value = config.displayDate;
-      document.getElementById('editEventTime').value = config.displayTime;
-      document.getElementById('editVenue').value = config.venueName;
-      document.getElementById('editVenueAddress').value = config.venueAddress;
-      document.getElementById('editBcaAccount').value = config.bcaAccount;
-      document.getElementById('editBcaHolder').value = config.bcaHolder;
+  const pinModal = document.getElementById('pinModal');
+  const editModal = document.getElementById('editModal');
+  const btnLogAdmin = document.getElementById('btnLogAdmin');
+  const pinForm = document.getElementById('pinForm');
+  const adminPinInput = document.getElementById('adminPinInput');
+  const pinErrorMessage = document.getElementById('pinErrorMessage');
+  const btnTogglePinView = document.getElementById('btnTogglePinView');
+  const btnAdminLogout = document.getElementById('btnAdminLogout');
+  const btnResetPhoto = document.getElementById('btnResetPhoto');
+
+  // Open & Close PIN Modal
+  window.openPinModal = function() {
+    if (pinModal) {
+      if (adminPinInput) {
+        adminPinInput.value = '';
+        adminPinInput.type = 'password';
+      }
+      if (pinErrorMessage) pinErrorMessage.style.display = 'none';
+      pinModal.classList.add('active');
+      setTimeout(() => {
+        if (adminPinInput) adminPinInput.focus();
+      }, 200);
+    }
+  };
+
+  window.closePinModal = function() {
+    if (pinModal) pinModal.classList.remove('active');
+  };
+
+  // Open & Close Edit Modal (Admin Panel)
+  window.openEditModal = function() {
+    if (editModal) {
+      // Pre-fill fields with current config
+      document.getElementById('editChildName').value = config.childName || '';
+      document.getElementById('editChildNick').value = config.childNick || '';
+      document.getElementById('editChildAge').value = config.age || 5;
+      document.getElementById('editParents').value = config.parents || '';
+      document.getElementById('editEventDate').value = config.displayDate || '';
+      document.getElementById('editEventTime').value = config.displayTime || '';
+      document.getElementById('editVenue').value = config.venueName || '';
+      document.getElementById('editVenueAddress').value = config.venueAddress || '';
+      document.getElementById('editBcaAccount').value = config.bcaAccount || '';
+      document.getElementById('editBcaHolder').value = config.bcaHolder || '';
+      document.getElementById('editMandiriAccount').value = config.mandiriAccount || '';
+      document.getElementById('editMandiriHolder').value = config.mandiriHolder || '';
+      document.getElementById('editHomeAddress').value = config.homeAddress || '';
+      document.getElementById('editWhatsappNumber').value = config.whatsappNumber || '';
+      const pinField = document.getElementById('editAdminPin');
+      if (pinField) pinField.value = '';
+
       editModal.classList.add('active');
-    });
-  }
+    }
+  };
 
   window.closeEditModal = function() {
     if (editModal) editModal.classList.remove('active');
   };
+
+  // Toggle View PIN
+  if (btnTogglePinView && adminPinInput) {
+    btnTogglePinView.addEventListener('click', () => {
+      if (adminPinInput.type === 'password') {
+        adminPinInput.type = 'text';
+        btnTogglePinView.textContent = '🙈';
+      } else {
+        adminPinInput.type = 'password';
+        btnTogglePinView.textContent = '👁️';
+      }
+    });
+  }
+
+  // Handle "Log Admin" Button Click
+  if (btnLogAdmin) {
+    btnLogAdmin.addEventListener('click', () => {
+      if (isAdminLoggedIn) {
+        openEditModal();
+      } else {
+        openPinModal();
+      }
+    });
+  }
+
+  // Handle PIN Form Submission
+  if (pinForm) {
+    pinForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const enteredPin = adminPinInput.value.trim();
+
+      if (enteredPin === adminPin) {
+        isAdminLoggedIn = true;
+        sessionStorage.setItem('hayyu_admin_logged_in', 'true');
+        closePinModal();
+        openEditModal();
+        showToast('Login admin berhasil! 🔓');
+      } else {
+        if (pinErrorMessage) pinErrorMessage.style.display = 'block';
+        adminPinInput.classList.add('shake');
+        setTimeout(() => {
+          adminPinInput.classList.remove('shake');
+        }, 400);
+        adminPinInput.focus();
+        adminPinInput.select();
+      }
+    });
+  }
+
+  // Handle Logout Button
+  if (btnAdminLogout) {
+    btnAdminLogout.addEventListener('click', () => {
+      isAdminLoggedIn = false;
+      sessionStorage.removeItem('hayyu_admin_logged_in');
+      closeEditModal();
+      showToast('Anda telah logout dari panel admin. 🔒');
+    });
+  }
 
   // Handle Photo Replacement from User's Device
   const photoInput = document.getElementById('editPhotoInput');
@@ -500,6 +603,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Handle Reset Photo Button
+  if (btnResetPhoto) {
+    btnResetPhoto.addEventListener('click', () => {
+      localStorage.removeItem('hayyu_custom_photo');
+      document.querySelectorAll('.child-photo-main, .cover-photo-img').forEach(img => {
+        img.src = 'assets/child_photo.jpg';
+      });
+      if (photoInput) photoInput.value = '';
+      showToast('Foto dikembalikan ke foto bawaan. 📸');
+    });
+  }
+
   // Restore custom photo if exists
   const savedPhoto = localStorage.getItem('hayyu_custom_photo');
   if (savedPhoto) {
@@ -513,19 +628,33 @@ document.addEventListener('DOMContentLoaded', () => {
   if (editForm) {
     editForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      config.childName = document.getElementById('editChildName').value;
+      config.childName = document.getElementById('editChildName').value.trim();
+      config.childNick = document.getElementById('editChildNick').value.trim() || config.childName.split(' ')[0];
       config.age = parseInt(document.getElementById('editChildAge').value) || 5;
-      config.displayDate = document.getElementById('editEventDate').value;
-      config.displayTime = document.getElementById('editEventTime').value;
-      config.venueName = document.getElementById('editVenue').value;
-      config.venueAddress = document.getElementById('editVenueAddress').value;
-      config.bcaAccount = document.getElementById('editBcaAccount').value;
-      config.bcaHolder = document.getElementById('editBcaHolder').value;
+      config.parents = document.getElementById('editParents').value.trim();
+      config.displayDate = document.getElementById('editEventDate').value.trim();
+      config.displayTime = document.getElementById('editEventTime').value.trim();
+      config.venueName = document.getElementById('editVenue').value.trim();
+      config.venueAddress = document.getElementById('editVenueAddress').value.trim();
+      config.bcaAccount = document.getElementById('editBcaAccount').value.trim();
+      config.bcaHolder = document.getElementById('editBcaHolder').value.trim();
+      config.mandiriAccount = document.getElementById('editMandiriAccount').value.trim();
+      config.mandiriHolder = document.getElementById('editMandiriHolder').value.trim();
+      config.homeAddress = document.getElementById('editHomeAddress').value.trim();
+      config.whatsappNumber = document.getElementById('editWhatsappNumber').value.trim();
+
+      // Check if Admin Changed PIN
+      const newPin = document.getElementById('editAdminPin').value.trim();
+      if (newPin) {
+        adminPin = newPin;
+        localStorage.setItem('hayyu_admin_pin', newPin);
+        showToast('PIN admin berhasil diperbarui! 🔑');
+      }
 
       localStorage.setItem('hayyu_invitation_config', JSON.stringify(config));
       applyConfigToDOM();
       closeEditModal();
-      showToast('Data undangan berhasil disimpan! ✨');
+      showToast('Pengaturan undangan berhasil disimpan! ✨');
     });
   }
 
@@ -535,9 +664,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.dyn-event-date').forEach(el => el.textContent = config.displayDate);
     document.querySelectorAll('.dyn-event-time').forEach(el => el.textContent = config.displayTime);
     document.querySelectorAll('.dyn-venue-name').forEach(el => el.textContent = config.venueName);
-    document.querySelectorAll('.dyn-venue-address').forEach(el => el.textContent = config.venueAddress);
+    document.querySelectorAll('.dyn-venue-address').forEach(el => {
+      el.innerHTML = `${escapeHtml(config.venueName)}<br>${escapeHtml(config.venueAddress)}`;
+    });
     document.querySelectorAll('.dyn-bca-number').forEach(el => el.textContent = config.bcaAccount);
     document.querySelectorAll('.dyn-bca-holder').forEach(el => el.textContent = `a.n ${config.bcaHolder}`);
+    document.querySelectorAll('.dyn-home-address').forEach(el => el.textContent = config.homeAddress);
+
+    // Update parent names
+    const parentEls = document.querySelectorAll('.parent-names span');
+    parentEls.forEach(el => {
+      el.textContent = config.parents;
+    });
   }
 
   applyConfigToDOM();

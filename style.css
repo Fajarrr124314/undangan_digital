@@ -1217,31 +1217,166 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/* Floating Edit / Customize Button */
-.btn-floating-edit {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  background: rgba(255, 255, 255, 0.9);
+/* Admin Panel Trigger in Footer */
+.admin-login-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-log-admin {
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(8px);
-  color: var(--color-hayyu-blue);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px dashed rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 8px 20px;
   border-radius: var(--border-radius-pill);
-  padding: 6px 14px;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
-  z-index: 95;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+}
+
+.btn-log-admin:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* PIN Verification Modal */
+.pin-modal-box {
+  max-width: 360px;
+  padding: 28px 24px;
+}
+
+.pin-icon-header {
+  font-size: 2.8rem;
+  margin-bottom: 8px;
+  animation: pulseIcon 2s infinite ease-in-out;
+}
+
+@keyframes pulseIcon {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.pin-input-group {
+  position: relative;
   display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.pin-input {
+  width: 100%;
+  padding: 14px 44px 14px 18px;
+  border: 2px solid #cbd5e1;
+  border-radius: 14px;
+  font-size: 1.25rem;
+  font-family: monospace;
+  letter-spacing: 4px;
+  text-align: center;
+  background: #f8fafc;
+  color: var(--color-text-main);
+  transition: var(--transition-smooth);
+}
+
+.pin-input:focus {
+  outline: none;
+  border-color: var(--color-hayyu-blue);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 84, 165, 0.15);
+}
+
+.pin-input.shake {
+  animation: shakeInput 0.4s ease;
+  border-color: var(--color-hayyu-red);
+}
+
+@keyframes shakeInput {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.btn-toggle-pin {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #64748b;
+  padding: 4px;
+}
+
+.pin-error-text {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-hayyu-red);
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* Admin Panel Styling Inside Edit Modal */
+.admin-badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #dcfce7;
+  color: #166534;
+  padding: 4px 12px;
+  border-radius: var(--border-radius-pill);
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.admin-section-divider {
+  border: none;
+  border-top: 1px dashed #e2e8f0;
+  margin: 16px 0 12px;
+}
+
+.admin-section-heading {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--color-hayyu-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-admin-logout {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--border-radius-pill);
+  padding: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
   align-items: center;
   gap: 6px;
   transition: var(--transition-smooth);
 }
 
-.btn-floating-edit:hover {
-  background: #ffffff;
-  transform: translateY(-1px);
+.btn-admin-logout:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
 }
 
 /* Toast Notification */

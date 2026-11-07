@@ -37,10 +37,6 @@
   <!-- Background Music Audio Source -->
   <audio id="bgMusic" src="assets/birthday_music.wav" loop preload="auto"></audio>
 
-  <!-- Floating Edit Button (To customize photo & details anytime) -->
-  <button id="btnFloatingEdit" class="btn-floating-edit" title="Sesuaikan data undangan">
-    <span>⚙️</span> Edit Data / Ganti Foto
-  </button>
 
   <!-- Floating Controls (Music Toggle & Confetti) -->
   <div class="floating-controls">
@@ -430,6 +426,13 @@
         </p>
         <p class="footer-closing">Sampai Jumpa di Hayyu Grill! 🥩🎉</p>
         <p class="footer-credit">Keluarga Bpk. Hendra & Ibu Maya • Hayyu Grill Korean BBQ</p>
+
+        <!-- Admin Access Panel Trigger -->
+        <div class="admin-login-wrapper">
+          <button id="btnLogAdmin" class="btn-log-admin" title="Log Admin / Kelola Data Undangan">
+            <span>🔒</span> Log Admin
+          </button>
+        </div>
       </footer>
 
     </main>
@@ -506,33 +509,100 @@
     </div>
   </div>
 
-  <!-- 3. Live Editor & Photo Swap Modal (Interactive Customizer) -->
+  <!-- 3. PIN Verification Modal (Akses Log Admin) -->
+  <div id="pinModal" class="modal-overlay">
+    <div class="modal-content pin-modal-box">
+      <button class="modal-close-btn" onclick="closePinModal()">✕</button>
+      <div class="pin-icon-header">🔐</div>
+      <h3 style="font-family: var(--font-heading); color: var(--color-hayyu-blue); font-size: 1.4rem;">Log Admin</h3>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted); margin: 6px 0 16px;">
+        Masukkan PIN keamanan untuk mengakses panel pengaturan dan ubah data undangan.
+      </p>
+
+      <form id="pinForm">
+        <div class="pin-input-group">
+          <input type="password" id="adminPinInput" class="pin-input" maxlength="8" placeholder="Masukkan PIN" autocomplete="off" required>
+          <button type="button" id="btnTogglePinView" class="btn-toggle-pin" title="Lihat/Sembunyikan PIN">👁️</button>
+        </div>
+        <p id="pinErrorMessage" class="pin-error-text" style="display: none;">PIN salah! Silakan coba lagi.</p>
+        
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+          <button type="button" class="btn-secondary" style="flex: 1;" onclick="closePinModal()">Batal</button>
+          <button type="submit" class="btn-primary" style="flex: 1;">Masuk</button>
+        </div>
+      </form>
+
+      <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 16px;">
+        💡 <em>PIN default: <strong>1234</strong> (dapat diganti di dalam panel admin)</em>
+      </p>
+    </div>
+  </div>
+
+  <!-- 4. Panel Admin & Pengaturan Undangan -->
   <div id="editModal" class="modal-overlay">
     <div class="modal-content" style="max-height: 90vh; overflow-y: auto; text-align: left;">
       <button class="modal-close-btn" onclick="closeEditModal()">✕</button>
-      <h3 style="font-family: var(--font-heading); color: var(--color-hayyu-blue); font-size: 1.35rem; text-align: center;">⚙️ Sesuaikan Undangan</h3>
-      <p style="font-size: 0.85rem; color: var(--color-text-muted); text-align: center; margin-bottom: 16px;">
-        Ubah foto anak, nama, hari, tanggal & nomor rekening langsung di sini
-      </p>
+      
+      <div style="text-align: center; margin-bottom: 14px;">
+        <span class="admin-badge-status">
+          <span>🛡️</span> Mode Admin Aktif
+        </span>
+        <h3 style="font-family: var(--font-heading); color: var(--color-hayyu-blue); font-size: 1.45rem;">
+          ⚙️ Panel Admin Undangan
+        </h3>
+        <p style="font-size: 0.83rem; color: var(--color-text-muted); margin-top: 2px;">
+          Kelola foto si kecil, jadwal acara, lokasi, nomor rekening, dan PIN keamanan.
+        </p>
+      </div>
 
       <form id="editForm" style="display: flex; flex-direction: column; gap: 12px;">
-        <!-- Upload Foto Anak -->
-        <div class="form-group">
-          <label class="form-label" for="editPhotoInput">📸 Ganti Foto Anak (Upload dari HP / Laptop)</label>
-          <input type="file" id="editPhotoInput" accept="image/*" class="form-input" style="padding: 8px;">
-          <small style="font-size: 0.75rem; color: var(--color-text-muted);">Pilih foto anak dari perangkat Anda untuk langsung mengganti foto utama.</small>
+        
+        <!-- BAGIAN 1: FOTO SI KECIL -->
+        <div class="admin-section-heading">
+          <span>📸</span> Foto Si Kecil
         </div>
+        <div class="form-group">
+          <label class="form-label" for="editPhotoInput">Upload Foto Baru (Dari HP / Laptop)</label>
+          <input type="file" id="editPhotoInput" accept="image/*" class="form-input" style="padding: 8px;">
+          <small style="font-size: 0.75rem; color: var(--color-text-muted);">Foto akan langsung menggantikan foto di cover depan dan tengah.</small>
+        </div>
+        <button type="button" id="btnResetPhoto" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; width: fit-content;">
+          🔄 Reset ke Foto Asli
+        </button>
 
+        <hr class="admin-section-divider">
+
+        <!-- BAGIAN 2: INFORMASI ANAK -->
+        <div class="admin-section-heading">
+          <span>🧒</span> Data Si Kecil
+        </div>
         <div class="form-group">
           <label class="form-label" for="editChildName">Nama Lengkap Anak</label>
           <input type="text" id="editChildName" class="form-input" required>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="editChildAge">Ulang Tahun Ke-</label>
-          <input type="number" id="editChildAge" class="form-input" min="1" max="18" required>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label" for="editChildNick">Nama Panggilan</label>
+            <input type="text" id="editChildNick" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editChildAge">Ulang Tahun Ke-</label>
+            <input type="number" id="editChildAge" class="form-input" min="1" max="18" required>
+          </div>
         </div>
 
+        <div class="form-group">
+          <label class="form-label" for="editParents">Nama Orang Tua / Keluarga</label>
+          <input type="text" id="editParents" class="form-input" required>
+        </div>
+
+        <hr class="admin-section-divider">
+
+        <!-- BAGIAN 3: WAKTU & TEMPAT -->
+        <div class="admin-section-heading">
+          <span>📅</span> Waktu & Tempat Acara
+        </div>
         <div class="form-group">
           <label class="form-label" for="editEventDate">Hari & Tanggal</label>
           <input type="text" id="editEventDate" class="form-input" required>
@@ -553,19 +623,105 @@
           <input type="text" id="editVenueAddress" class="form-input" required>
         </div>
 
-        <div class="form-group">
-          <label class="form-label" for="editBcaAccount">Nomor Rekening BCA</label>
-          <input type="text" id="editBcaAccount" class="form-input" required>
+        <hr class="admin-section-divider">
+
+        <!-- BAGIAN 4: KADO DIGITAL & REKENING -->
+        <div class="admin-section-heading">
+          <span>🎁</span> Rekening Kado Digital
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label" for="editBcaAccount">No. Rekening BCA</label>
+            <input type="text" id="editBcaAccount" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editBcaHolder">Atas Nama BCA</label>
+            <input type="text" id="editBcaHolder" class="form-input" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label" for="editMandiriAccount">No. Rekening Mandiri</label>
+            <input type="text" id="editMandiriAccount" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editMandiriHolder">Atas Nama Mandiri</label>
+            <input type="text" id="editMandiriHolder" class="form-input" required>
+          </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="editBcaHolder">Atas Nama Rekening</label>
-          <input type="text" id="editBcaHolder" class="form-input" required>
+          <label class="form-label" for="editHomeAddress">Alamat Pengiriman Kado Fisik</label>
+          <textarea id="editHomeAddress" class="form-textarea" style="min-height: 60px;" required></textarea>
         </div>
 
-        <button type="submit" class="btn-primary" style="margin-top: 10px; width: 100%;">
-          <span>💾</span> Simpan Perubahan
+        <div class="form-group">
+          <label class="form-label" for="editWhatsappNumber">Nomor WhatsApp Konfirmasi (Contoh: 6281234567890)</label>
+          <input type="text" id="editWhatsappNumber" class="form-input" required>
+        </div>
+
+        <hr class="admin-section-divider">
+
+        <!-- BAGIAN 5: REKAP KEHADIRAN (HEADCOUNT RESERVASI HAYYU GRILL) -->
+        <div class="admin-section-heading">
+          <span>📊</span> Rekap Kehadiran (Reservasi Meja Hayyu Grill)
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 10px; text-align: center;">
+            <div style="font-size: 0.72rem; color: #166534; font-weight: 700; text-transform: uppercase;">Total Pax Hadir</div>
+            <div id="adminSummaryHadir" style="font-size: 1.45rem; font-weight: 800; color: #15803d; font-family: var(--font-heading);">0 Orang</div>
+          </div>
+          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 10px; text-align: center;">
+            <div style="font-size: 0.72rem; color: #991b1b; font-weight: 700; text-transform: uppercase;">Berhalangan</div>
+            <div id="adminSummaryTidakHadir" style="font-size: 1.45rem; font-weight: 800; color: #b91c1c; font-family: var(--font-heading);">0 Tamu</div>
+          </div>
+        </div>
+        <button type="button" id="btnCopyRsvpSummary" class="btn-secondary" style="width: 100%; font-size: 0.82rem; padding: 8px 12px;">
+          📋 Salin Format Rekap Reservasi Meja Hayyu Grill
         </button>
+
+        <hr class="admin-section-divider">
+
+        <!-- BAGIAN 6: GENERATOR LINK UNDANGAN WHATSAPP -->
+        <div class="admin-section-heading">
+          <span>💌</span> Buat Link Undangan Tamu (WhatsApp)
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="guestNameGenerator">Nama Tamu yang Mau Diundang</label>
+          <input type="text" id="guestNameGenerator" class="form-input" placeholder="Contoh: Om Kevin & Tante Vina">
+          <small style="font-size: 0.75rem; color: var(--color-text-muted);">Nama ini akan otomatis muncul secara eksklusif di cover depan undangan.</small>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <button type="button" id="btnShareWaGuest" class="btn-primary" style="flex: 1; font-size: 0.82rem; padding: 10px 8px;">
+            <span>💬</span> Kirim via WhatsApp
+          </button>
+          <button type="button" id="btnCopyLinkGuest" class="btn-secondary" style="flex: 1; font-size: 0.82rem; padding: 10px 8px;">
+            <span>📋</span> Salin Link Undangan
+          </button>
+        </div>
+
+        <hr class="admin-section-divider">
+
+        <!-- BAGIAN 7: KEAMANAN / GANTI PIN -->
+        <div class="admin-section-heading">
+          <span>🔑</span> Keamanan PIN Admin
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editAdminPin">Ganti PIN Admin (Kosongkan jika tidak ingin diubah)</label>
+          <input type="password" id="editAdminPin" class="form-input" placeholder="Masukkan PIN baru (angka)">
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+          <button type="submit" class="btn-primary" style="width: 100%;">
+            <span>💾</span> Simpan Semua Perubahan
+          </button>
+          
+          <button type="button" id="btnAdminLogout" class="btn-admin-logout">
+            <span>🚪</span> Keluar / Logout Admin
+          </button>
+        </div>
       </form>
     </div>
   </div>
