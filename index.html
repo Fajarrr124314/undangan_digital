@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Undangan Ulang Tahun - Keenan Althafandra | Hayyu Grill</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/hayyu_grill_logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Fullscreen Hayyu Blue Background with Seigaiha wave pattern -->
+  <div class="page-background"></div>
+
+  <!-- Ambient Floating Sparkles -->
+  <div class="sparkles-container">
+    <span class="sparkle-icon" style="top: 8%; left: 10%; font-size: 1.2rem;">✦</span>
+    <span class="sparkle-icon" style="top: 18%; right: 12%; font-size: 1.6rem; animation-delay: 1s;">🌸</span>
+    <span class="sparkle-icon" style="top: 35%; left: 8%; font-size: 1.4rem; animation-delay: 2s;">+</span>
+    <span class="sparkle-icon" style="top: 55%; right: 9%; font-size: 1.5rem; animation-delay: 1.5s;">✦</span>
+    <span class="sparkle-icon" style="top: 72%; left: 12%; font-size: 1.3rem; animation-delay: 2.5s;">🌸</span>
+    <span class="sparkle-icon" style="top: 88%; right: 15%; font-size: 1.4rem; animation-delay: 0.5s;">+</span>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:250;"></canvas>
+
+  <!-- Background Music Audio Source -->
+  <audio id="bgMusic" src="assets/birthday_music.wav" loop preload="auto"></audio>
+
+  <!-- Floating Edit Button (To customize photo & details anytime) -->
+  <button id="btnFloatingEdit" class="btn-floating-edit" title="Sesuaikan data undangan">
+    <span>⚙️</span> Edit Data / Ganti Foto
+  </button>
+
+  <!-- Floating Controls (Music Toggle & Confetti) -->
+  <div class="floating-controls">
+    <button id="confettiBtn" class="btn-floating" title="Tebarkan Confetti! 🎉">
+      <span>🎉</span>
+    </button>
+    <button id="musicToggleBtn" class="btn-floating btn-music-toggle" title="Putar / Hentikan Musik">
+      <span>🎵</span>
+    </button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="toast-container">
+    <span>✨</span>
+    <span class="toast-text">Berhasil disalin!</span>
+  </div>
+
+  <!-- Main Mobile-First Wrapper -->
+  <div class="invitation-wrapper">
+
+    <!-- =================================================================
+         COVER / OPENING SCREEN (OVERLAY)
+         ================================================================= -->
+    <div id="coverScreen" class="cover-screen">
+      <!-- Top Badges -->
+      <div class="cover-header">
+        <div class="brand-badge">
+          <span>🥩</span> KOREAN BBQ
+        </div>
+        <div class="brand-badge">
+          <span>🏢</span> YOGYA GROUP
+        </div>
+      </div>
+
+      <!-- Center Elements -->
+      <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <!-- Logo Hayyu Grill -->
+        <div class="cover-logo-wrapper">
+          <img src="assets/hayyu_grill_logo.png" alt="Hayyu Grill Korean BBQ" class="hayyu-logo-img">
+        </div>
+
+        <p class="cover-title">Special Birthday Invitation</p>
+
+        <!-- Child Centered Photo on Cover -->
+        <div class="cover-photo-wrapper">
+          <div class="cover-photo-frame">
+            <img src="assets/child_photo.jpg" alt="Foto Anak Ulang Tahun" class="cover-photo-img">
+          </div>
+          <span class="party-hat-icon">🎉</span>
+        </div>
+
+        <h1 class="cover-child-name dyn-child-name">Keenan Althafandra</h1>
+        <p style="font-size: 1.05rem; font-weight: 700; color: #ffde59; margin-top: 4px;" class="dyn-child-age">
+          Ke-5 Tahun 🎂
+        </p>
+
+        <!-- Guest Card -->
+        <div class="cover-guest-card">
+          <div class="cover-guest-label">Kepada Yth. Bapak/Ibu/Saudara/i:</div>
+          <div id="coverGuestName" class="cover-guest-name">Tamu Undangan & Keluarga</div>
+        </div>
+      </div>
+
+      <!-- Open Button -->
+      <div style="width: 100%; padding-bottom: 8px;">
+        <button id="openInvitationBtn" class="btn-open-invitation">
+          <span>💌</span> Buka Undangan
+        </button>
+      </div>
+    </div>
+
+    <!-- =================================================================
+         MAIN INVITATION CONTENT
+         ================================================================= -->
+    <main id="mainContent" class="main-content">
+
+      <!-- 1. Top Brand Banner -->
+      <section class="brand-top-banner">
+        <div class="top-badges-row">
+          <img src="assets/korean_bbq_badge.png" alt="Korean BBQ" class="top-badge-item" style="height: 24px; filter: brightness(0) invert(1);">
+          <img src="assets/yogya_group_badge.png" alt="Yogya Group" class="top-badge-item" style="height: 24px; filter: brightness(0) invert(1);">
+        </div>
+        <img src="assets/hayyu_grill_logo.png" alt="Hayyu Grill Logo" class="main-hayyu-logo">
+        <div>
+          <span class="party-badge-pill">🎂 The 5th Birthday Celebration 🎈</span>
+        </div>
+      </section>
+
+      <!-- 2. Centered Child Spotlight (Foto di Tengah) -->
+      <section class="invitation-card child-spotlight-card">
+        <div class="card-title-section">
+          <p class="section-subtitle">You're Invited!</p>
+          <h2 class="section-title">Hari Bahagia Si Kecil</h2>
+          <div class="card-decoration-line"></div>
+        </div>
+
+        <!-- FOTO UTAMA DI TENGAH -->
+        <div class="child-avatar-wrapper">
+          <div class="child-avatar-glow"></div>
+          <div class="child-avatar-frame">
+            <img src="assets/child_photo.jpg" alt="Foto Keenan Althafandra" class="child-photo-main">
+          </div>
+          <span class="avatar-hat-badge">🥳</span>
+          <span class="child-age-badge dyn-child-age">Ke-5 Tahun 🎂</span>
+        </div>
+
+        <h3 class="child-name-display dyn-child-name">Keenan Althafandra</h3>
+        <p class="child-sub-greeting">Turning 5 Years Old! 🌟</p>
+
+        <p class="child-bio-text">
+          Puji syukur kepada Tuhan Yang Maha Esa atas bertambahnya usia ke-5 putra kami tercinta. Merupakan suatu kebahagiaan dan kehormatan bagi kami apabila Bapak/Ibu/Saudara/i serta teman-teman berkenan hadir untuk memberikan doa restu dan merayakan hari istimewa ini bersama kami di <strong>Hayyu Grill Korean BBQ</strong>.
+        </p>
+
+        <div class="parent-names">
+          Salam hangat,<br>
+          <span style="font-size: 0.95rem; color: var(--color-hayyu-red);">Keluarga Bpk. Hendra & Ibu Maya</span>
+        </div>
+      </section>
+
+      <!-- 3. Waktu & Tempat Acara (Hari, Tgl, dll) -->
+      <section class="invitation-card event-details-card">
+        <div class="card-title-section">
+          <p class="section-subtitle">Waktu & Tempat</p>
+          <h2 class="section-title">Jadwal Acara</h2>
+          <div class="card-decoration-line"></div>
+        </div>
+
+        <!-- Real-time Countdown Timer -->
+        <div class="countdown-box">
+          <p id="countdownLabel" class="countdown-label">⏳ Menghitung Hari Menuju Acara</p>
+          <div class="countdown-grid">
+            <div class="timer-item">
+              <div id="timerDays" class="timer-value">00</div>
+              <div class="timer-unit">Hari</div>
+            </div>
+            <div class="timer-item">
+              <div id="timerHours" class="timer-value">00</div>
+              <div class="timer-unit">Jam</div>
+            </div>
+            <div class="timer-item">
+              <div id="timerMins" class="timer-value">00</div>
+              <div class="timer-unit">Menit</div>
+            </div>
+            <div class="timer-item">
+              <div id="timerSecs" class="timer-value">00</div>
+              <div class="timer-unit">Detik</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event Info List -->
+        <div class="event-info-list">
+          <!-- Hari & Tanggal -->
+          <div class="event-info-item">
+            <div class="info-icon-badge">📅</div>
+            <div class="info-content">
+              <div class="info-label">Hari & Tanggal</div>
+              <div class="info-main-text dyn-event-date">Minggu, 29 November 2026</div>
+              <div class="info-sub-text">Pukul 15.00 WIB s/d Selesai</div>
+            </div>
+          </div>
+
+          <!-- Waktu Pelaksanaan -->
+          <div class="event-info-item">
+            <div class="info-icon-badge red">⏰</div>
+            <div class="info-content">
+              <div class="info-label">Waktu Acara</div>
+              <div class="info-main-text dyn-event-time">15.00 - 18.00 WIB</div>
+              <div class="info-sub-text">Mohon hadir tepat waktu untuk games seru!</div>
+            </div>
+          </div>
+
+          <!-- Lokasi / Tempat -->
+          <div class="event-info-item">
+            <div class="info-icon-badge">📍</div>
+            <div class="info-content">
+              <div class="info-label">Lokasi Acara</div>
+              <div class="info-main-text dyn-venue-name">Hayyu Grill Korean BBQ</div>
+              <div class="info-sub-text dyn-venue-address">
+                Lantai 2, Mall Yogya Grand Karawang<br>
+                Jl. Kertabumi No. 12, Karawang Kulon, Kec. Karawang Barat
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="location-actions">
+          <a href="https://maps.google.com/?q=Hayyu+Grill+Yogya+Grand+Karawang" target="_blank" class="btn-primary">
+            <span>🗺️</span> Buka di Google Maps
+          </a>
+          <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ulang+Tahun+Keenan+ke-5+di+Hayyu+Grill&dates=20261129T080000Z/20261129T110000Z&details=Perayaan+ulang+tahun+Keenan+ke-5+di+Hayyu+Grill+Korean+BBQ+Yogya+Grand&location=Hayyu+Grill+Korean+BBQ" target="_blank" class="btn-secondary">
+            <span>📅</span> Simpan ke Google Calendar
+          </a>
+        </div>
+
+        <!-- Dress Code Banner -->
+        <div class="dresscode-banner">
+          <span style="font-size: 1.8rem;">👕</span>
+          <div>
+            <div style="font-size: 0.85rem; font-weight: 800; color: #c2410c;">DRESS CODE</div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #1e293b;">Casual & Ceria (Nuansa Biru, Putih & Merah)</div>
+            <div class="dresscode-colors">
+              <span class="color-dot" style="background-color: #2554a5;" title="Biru Hayyu"></span>
+              <span class="color-dot" style="background-color: #ffffff;" title="Putih"></span>
+              <span class="color-dot" style="background-color: #e52e2e;" title="Merah"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Rundown Acara -->
+      <section class="invitation-card">
+        <div class="card-title-section">
+          <p class="section-subtitle">Susunan Acara</p>
+          <h2 class="section-title">Party Rundown</h2>
+          <div class="card-decoration-line"></div>
+        </div>
+
+        <div class="timeline-list">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-time">15.00 - 15.30 WIB</div>
+              <div class="timeline-event">Registrasi & Welcome Drinks 🧃</div>
+              <div class="timeline-desc">Penyambutan tamu & arena bermain anak</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-time">15.30 - 16.15 WIB</div>
+              <div class="timeline-event">Fun Games & Magic Show 🎩</div>
+              <div class="timeline-desc">Permainan berhadiah & sulap ceria bersama MC</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-time">16.15 - 16.45 WIB</div>
+              <div class="timeline-event">Tiup Lilin & Potong Kue 🎂</div>
+              <div class="timeline-desc">Menyanyikan lagu ulang tahun & doa bersama</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-time">16.45 - 17.45 WIB</div>
+              <div class="timeline-event">Korean BBQ Feast! 🥩🔥</div>
+              <div class="timeline-desc">Makan bersama sajian lezat di Hayyu Grill</div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-time">17.45 - 18.00 WIB</div>
+              <div class="timeline-event">Foto Bersama & Goodie Bag 🎁</div>
+              <div class="timeline-desc">Sesi foto kenang-kenangan & pembagian souvenir</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Kasih Kado Digital (Amplop Digital & Kado Fisik) -->
+      <section class="invitation-card">
+        <div class="card-title-section">
+          <p class="section-subtitle">Tanda Kasih</p>
+          <h2 class="section-title">Kasih Kado Digital</h2>
+          <div class="card-decoration-line"></div>
+        </div>
+
+        <p class="gift-intro">
+          Doa restu Anda merupakan karunia terindah bagi Keenan. Namun apabila memberi adalah ungkapan kasih Anda, kami menyediakan amplop digital berikut:
+        </p>
+
+        <div class="gift-cards-grid">
+          <!-- Rekening BCA -->
+          <div class="bank-card">
+            <div class="bank-header">
+              <span class="bank-name">BCA</span>
+              <div class="bank-chip"></div>
+            </div>
+            <div class="account-number dyn-bca-number">88301928374</div>
+            <div class="account-holder dyn-bca-holder">a.n Hendra / Keenan</div>
+            <button class="btn-copy" onclick="copyToClipboard('88301928374', 'Nomor Rekening BCA berhasil disalin! 📋')">
+              <span>📋</span> Salin No. Rekening
+            </button>
+          </div>
+
+          <!-- Rekening Mandiri -->
+          <div class="bank-card" style="background: linear-gradient(135deg, #092c4c 0%, #174b80 100%);">
+            <div class="bank-header">
+              <span class="bank-name">MANDIRI</span>
+              <div class="bank-chip"></div>
+            </div>
+            <div class="account-number">132002938472</div>
+            <div class="account-holder">a.n Hendra / Keenan</div>
+            <button class="btn-copy" onclick="copyToClipboard('132002938472', 'Nomor Rekening Mandiri berhasil disalin! 📋')">
+              <span>📋</span> Salin No. Rekening
+            </button>
+          </div>
+        </div>
+
+        <!-- Secondary Gift Options -->
+        <div class="gift-secondary-options">
+          <button class="btn-gift-option" onclick="openQrisModal()">
+            <span class="icon">📱</span>
+            <span>Tampilkan QRIS</span>
+          </button>
+          <button class="btn-gift-option" onclick="openAddressModal()">
+            <span class="icon">🎁</span>
+            <span>Kirim Kado Fisik</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 6. RSVP & Konfirmasi Kehadiran -->
+      <section class="invitation-card">
+        <div class="card-title-section">
+          <p class="section-subtitle">Konfirmasi</p>
+          <h2 class="section-title">RSVP Kehadiran</h2>
+          <div class="card-decoration-line"></div>
+        </div>
+
+        <form id="rsvpForm" class="rsvp-form">
+          <div class="form-group">
+            <label class="form-label" for="rsvpName">Nama Tamu / Keluarga</label>
+            <input type="text" id="rsvpName" class="form-input" placeholder="Masukkan nama Anda" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="rsvpStatus">Konfirmasi Kehadiran</label>
+            <select id="rsvpStatus" class="form-select">
+              <option value="hadir">Ya, Saya Akan Hadir 🎉</option>
+              <option value="tidak-hadir">Maaf, Berhalangan Hadir 🙏</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="rsvpPax">Jumlah Orang</label>
+            <select id="rsvpPax" class="form-select">
+              <option value="1">1 Orang</option>
+              <option value="2" selected>2 Orang</option>
+              <option value="3">3 Orang</option>
+              <option value="4">4 Orang atau lebih</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="rsvpMessage">Doa & Ucapan untuk Keenan</label>
+            <textarea id="rsvpMessage" class="form-textarea" placeholder="Tuliskan ucapan dan doa terbaik untuk Keenan..."></textarea>
+          </div>
+
+          <div class="rsvp-actions">
+            <button type="submit" class="btn-rsvp-submit">
+              <span>✉️</span> Kirim Konfirmasi & Ucapan
+            </button>
+            <button type="button" id="btnWhatsappRsvp" class="btn-whatsapp-rsvp">
+              <span>💬</span> Konfirmasi via WhatsApp
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 7. Buku Tamu & Wishes Wall -->
+      <section class="invitation-card">
+        <div class="card-title-section">
+          <p class="section-subtitle">Doa & Harapan</p>
+          <h2 class="section-title">Buku Ucapan</h2>
+          <div class="card-decoration-line"></div>
+        </div>
+
+        <div id="wishesContainer" class="wishes-container">
+          <!-- Rendered dynamically by script.js -->
+        </div>
+      </section>
+
+      <!-- 8. Footer -->
+      <footer class="invitation-footer">
+        <img src="assets/hayyu_grill_logo.png" alt="Hayyu Grill" class="footer-logo">
+        <p class="footer-quote">
+          "Merupakan suatu kebahagiaan bagi kami sekeluarga apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu untuk Keenan."
+        </p>
+        <p class="footer-closing">Sampai Jumpa di Hayyu Grill! 🥩🎉</p>
+        <p class="footer-credit">Keluarga Bpk. Hendra & Ibu Maya • Hayyu Grill Korean BBQ</p>
+      </footer>
+
+    </main>
+
+  </div>
+
+  <!-- =================================================================
+       MODALS
+       ================================================================= -->
+
+  <!-- 1. QRIS Payment Modal -->
+  <div id="qrisModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeQrisModal()">✕</button>
+      <h3 style="font-family: var(--font-heading); color: var(--color-hayyu-blue); font-size: 1.35rem;">QRIS Pembayaran Digital</h3>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">Scan menggunakan GoPay, OVO, Dana, BCA Mobile, atau e-wallet lainnya</p>
+      
+      <!-- Generated QRIS representation -->
+      <svg class="qris-preview-img" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="200" height="200" fill="#ffffff"/>
+        <!-- QR Code Corners -->
+        <rect x="20" y="20" width="40" height="40" fill="#1e293b"/>
+        <rect x="25" y="25" width="30" height="30" fill="#ffffff"/>
+        <rect x="30" y="30" width="20" height="20" fill="#1e293b"/>
+        <rect x="140" y="20" width="40" height="40" fill="#1e293b"/>
+        <rect x="145" y="25" width="30" height="30" fill="#ffffff"/>
+        <rect x="150" y="30" width="20" height="20" fill="#1e293b"/>
+        <rect x="20" y="140" width="40" height="40" fill="#1e293b"/>
+        <rect x="25" y="145" width="30" height="30" fill="#ffffff"/>
+        <rect x="30" y="150" width="20" height="20" fill="#1e293b"/>
+        <!-- Center Emblem -->
+        <rect x="85" y="85" width="30" height="30" rx="6" fill="#e52e2e"/>
+        <text x="100" y="105" font-size="16" fill="#ffffff" text-anchor="middle" font-family="sans-serif" font-weight="bold">🎁</text>
+        <!-- Mock QR Pattern Pixels -->
+        <circle cx="90" cy="35" r="5" fill="#1e293b"/>
+        <circle cx="110" cy="35" r="5" fill="#1e293b"/>
+        <circle cx="75" cy="55" r="5" fill="#1e293b"/>
+        <circle cx="125" cy="55" r="5" fill="#1e293b"/>
+        <circle cx="45" cy="90" r="5" fill="#1e293b"/>
+        <circle cx="155" cy="90" r="5" fill="#1e293b"/>
+        <circle cx="75" cy="125" r="5" fill="#1e293b"/>
+        <circle cx="125" cy="125" r="5" fill="#1e293b"/>
+        <circle cx="90" cy="155" r="5" fill="#1e293b"/>
+        <circle cx="110" cy="155" r="5" fill="#1e293b"/>
+      </svg>
+
+      <p style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">NMID: ID1020394857201</p>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted);">A.N. KELUARGA KEENAN ALTHAFANDRA</p>
+      
+      <button class="btn-primary" style="margin-top: 14px; width: 100%;" onclick="copyToClipboard('ID1020394857201', 'NMID QRIS berhasil disalin! 📋')">
+        <span>📋</span> Salin NMID QRIS
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Physical Gift Address Modal -->
+  <div id="addressModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeAddressModal()">✕</button>
+      <h3 style="font-family: var(--font-heading); color: var(--color-hayyu-blue); font-size: 1.35rem;">Alamat Pengiriman Kado</h3>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 4px;">Kado fisik dapat dikirimkan ke alamat tempat tinggal kami:</p>
+      
+      <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 16px; padding: 16px; margin: 16px 0; text-align: left;">
+        <p style="font-weight: 700; color: var(--color-hayyu-blue); font-size: 0.95rem;">Penerima: Keenan / Maya</p>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin: 4px 0;">No. HP: 0812-3456-7890</p>
+        <p style="font-size: 0.9rem; color: #1e293b; line-height: 1.5; margin-top: 6px;" class="dyn-home-address">
+          Perumahan Grand Galuh Residence Blok B4 No. 12, Telukjambe Timur, Karawang, Jawa Barat 41361
+        </p>
+      </div>
+
+      <button class="btn-primary" style="width: 100%;" onclick="copyToClipboard('Perumahan Grand Galuh Residence Blok B4 No. 12, Telukjambe Timur, Karawang, Jawa Barat 41361 (Penerima: Keenan / 081234567890)', 'Alamat pengiriman kado berhasil disalin! 📋')">
+        <span>📋</span> Salin Alamat Pengiriman
+      </button>
+    </div>
+  </div>
+
+  <!-- 3. Live Editor & Photo Swap Modal (Interactive Customizer) -->
+  <div id="editModal" class="modal-overlay">
+    <div class="modal-content" style="max-height: 90vh; overflow-y: auto; text-align: left;">
+      <button class="modal-close-btn" onclick="closeEditModal()">✕</button>
+      <h3 style="font-family: var(--font-heading); color: var(--color-hayyu-blue); font-size: 1.35rem; text-align: center;">⚙️ Sesuaikan Undangan</h3>
+      <p style="font-size: 0.85rem; color: var(--color-text-muted); text-align: center; margin-bottom: 16px;">
+        Ubah foto anak, nama, hari, tanggal & nomor rekening langsung di sini
+      </p>
+
+      <form id="editForm" style="display: flex; flex-direction: column; gap: 12px;">
+        <!-- Upload Foto Anak -->
+        <div class="form-group">
+          <label class="form-label" for="editPhotoInput">📸 Ganti Foto Anak (Upload dari HP / Laptop)</label>
+          <input type="file" id="editPhotoInput" accept="image/*" class="form-input" style="padding: 8px;">
+          <small style="font-size: 0.75rem; color: var(--color-text-muted);">Pilih foto anak dari perangkat Anda untuk langsung mengganti foto utama.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editChildName">Nama Lengkap Anak</label>
+          <input type="text" id="editChildName" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editChildAge">Ulang Tahun Ke-</label>
+          <input type="number" id="editChildAge" class="form-input" min="1" max="18" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editEventDate">Hari & Tanggal</label>
+          <input type="text" id="editEventDate" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editEventTime">Waktu Acara</label>
+          <input type="text" id="editEventTime" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editVenue">Nama Tempat / Cabang</label>
+          <input type="text" id="editVenue" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editVenueAddress">Alamat Lengkap</label>
+          <input type="text" id="editVenueAddress" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editBcaAccount">Nomor Rekening BCA</label>
+          <input type="text" id="editBcaAccount" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editBcaHolder">Atas Nama Rekening</label>
+          <input type="text" id="editBcaHolder" class="form-input" required>
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 10px; width: 100%;">
+          <span>💾</span> Simpan Perubahan
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="40" viewBox="0 0 80 40">
+  <defs>
+    <style>
+      .wave { fill: none; stroke: rgba(255, 255, 255, 0.09); stroke-width: 1.5; }
+    </style>
+  </defs>
+  <!-- Top Center Wave -->
+  <circle cx="40" cy="0" r="10" class="wave" />
+  <circle cx="40" cy="0" r="20" class="wave" />
+  <circle cx="40" cy="0" r="30" class="wave" />
+  <circle cx="40" cy="0" r="40" class="wave" />
+
+  <!-- Bottom Left Wave -->
+  <circle cx="0" cy="40" r="10" class="wave" />
+  <circle cx="0" cy="40" r="20" class="wave" />
+  <circle cx="0" cy="40" r="30" class="wave" />
+  <circle cx="0" cy="40" r="40" class="wave" />
+
+  <!-- Bottom Right Wave -->
+  <circle cx="80" cy="40" r="10" class="wave" />
+  <circle cx="80" cy="40" r="20" class="wave" />
+  <circle cx="80" cy="40" r="30" class="wave" />
+  <circle cx="80" cy="40" r="40" class="wave" />
+</svg>
